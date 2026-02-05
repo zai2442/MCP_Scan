@@ -1,15 +1,15 @@
-# HexStrike AI 简化版项目结构
+# MCP_kali 简化版项目结构
 
 ## 项目概述
 
-HexStrike AI 简化版是一个基于 MCP 协议的分布式渗透测试协同系统，专为本地测试环境设计，保留核心功能，支持在笔记本和虚拟机中运行。
+MCP_kali 简化版是一个基于 MCP 协议的分布式渗透测试协同系统，专为本地测试环境设计，保留核心功能，支持在笔记本和虚拟机中运行。
 
 ---
 
 ## 精简目录结构
 
 ```
-hexstrike-ai/
+MCP_kali/
 ├── README.md                          # 项目说明
 ├── requirements.txt                   # Python 依赖
 ├── setup.py                          # 包配置
@@ -123,9 +123,6 @@ hexstrike-ai/
 │       └── test_cli.py               # CLI 测试
 │
 ├── deployment/                       # 简化部署
-│   ├── docker/                       # Docker 部署
-│   │   ├── Dockerfile                # 统一镜像
-│   │   └── docker-compose.yml        # 容器编排
 │   └── scripts/                      # 部署脚本
 │       ├── start.sh                  # 启动脚本
 │       ├── stop.sh                   # 停止脚本
@@ -189,7 +186,7 @@ python client/cli.py
 ### Docker 容器部署
 ```bash
 # 构建镜像
-docker build -t hexstrike-ai .
+docker build -t MCP_kali .
 
 # 启动服务
 docker-compose up -d
@@ -240,7 +237,7 @@ tools:
 # 日志配置
 logging:
   level: "INFO"
-  file: "hexstrike.log"
+  file: "MCP_kali.log"
 ```
 
 ---
