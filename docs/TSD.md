@@ -2,97 +2,88 @@
 
 ## 1. System Architecture
 
-### 1.1. Overview
-MCP_scan is a distributed penetration testing system based on the Model Context Protocol (MCP). It decouples the decision-making brain (AI), the coordination heart (Scheduler), and the execution limbs (Recon/Exploit Servers).
+The system adopts a **Simplified Distributed Architecture** optimized for local and lab environments.
 
 ```mermaid
 graph TD
-    subgraph Control_Plane
-        CLI[Command Line Client] -->|Task Request| SCH[Scheduler]
-        SCH -->|Context| AI[AI Decision Server]
-        AI -->|Attack Plan| SCH
+    subgraph Client
+        CLI[Rich/Click CLI] -->|HTTP/REST| API[FastAPI Gateway]
+    end
+
+    subgraph Core_System
+        API --> Scheduler[Task Scheduler]
+        Scheduler --> Knowledge[Knowledge Base]
+        Scheduler --> DAG[DAG Builder]
     end
 
     subgraph Execution_Plane
-        SCH -->|MCP Call| RS[Recon Server]
-        SCH -->|MCP Call| ES[Exploit Server]
-        RS -->|Results| KB[(Knowledge Base)]
-        ES -->|Evidence| KB
-        KB -.->|Telemetry| AI
+        Scheduler -->|MCP Protocol| Recon[Recon Server]
+        Scheduler -->|MCP Protocol| Exploit[Exploit Server]
+        Scheduler -->|MCP Protocol| AI[AI Decision Server]
     end
 
-    subgraph Subsystems
-        KB[(Redis / JSON)]
-        SEC[Security Sanitizer]
+    subgraph Storage
+        Knowledge -->|Read/Write| Redis[(Redis / JSON)]
     end
 
-    RS -->|Wrap| Nmap[Nmap / Gobuster]
-    ES -->|Wrap| Nuclei / SQLMap
-    RS & ES --- SEC
+    Recon --> Nmap/Gobuster/Enum4linux
+    Exploit --> SQLMap/Hydra/Metasploit
 ```
 
-### 1.2. Planning & Research Context
+### 1.1. Planning & Research Context
 > [!NOTE]
-> This TSD is grounded in the project's persistent working memory. For ongoing technical progress and detailed research findings, refer to [task_plan.md](task_plan.md) and [findings.md](findings.md).
+> This architecture is derived from `PROJECT_STRUCTURE_SIMPLIFIED.md` and leverages the proven `MCP_kali` tool interfaces.
 
 ## 2. Technology Stack
-- **Core Engine**: Python 3.10+
-- **API Layer**: FastAPI (REST/SSE for MCP)
-- **Validation**: Pydantic v2
-- **Communication**: MCP Protocol (JSON-RPC over HTTP/SSE)
-- **State & Storage**: Redis (Distributed broker & transient cache)
-- **Security Tools**: Nmap, Nuclei, Sqlmap, Gobuster
+- **Language**: Python 3.8+
+- **Web Framework**: FastAPI (for MCP server endpoints)
+- **Protocol**: MCP (Model Context Protocol) over HTTP/SSE
+- **Data Model**: Pydantic v2
+- **State Management**: Redis (Queue & Asset Store)
+- **CLI**: Click + Rich
+- **Deployment**: Docker Compose / Systemd
 
-## 3. Requirement Mapping
-This section maps the technical components back to the [PRD.md](PRD.md) functional requirements.
+## 3. Subsystem Design
 
-| Req ID | Requirement | Technical Component | Design Decision |
-| :--- | :--- | :--- | :--- |
-| **F1** | MCP-Compliant Tool Wrappers | `servers/recon/`, `servers/exploit/` | Decouples logic from tool syntax via MCP Capabilities. |
-| **F2** | Basic Task Scheduling | `core/scheduler/` | Uses DAG-based execution to handle tool dependencies. |
-| **F3** | Terminal-Based CLI | `client/cli/` | Python-based CLI for real-time monitoring and control. |
-| **F4** | AI-Driven Decomposition | `core/ai_engine/` | AI analyzes goals to generate optimized attack paths. |
-| **F5** | Attack Chain Visualization | `core/reporting/` | Generates Mermaid/GraphViz diagrams from execution telemetry. |
+### 3.1. Core System (`core/`)
+- **scheduler/distributed_executor.py**: Manages the lifecycle of scan jobs. Breaks down high-level objectives into tool-specific tasks.
+- **knowledge/asset_model.py**: Stores the "World View" (IPs, Ports, Services).
+- **mcp/registry.py**: Auto-discovers available capabilities from registered servers.
 
-## 4. Key Design Decisions
+### 3.2. Servers (`servers/`)
+Based on `MCP_kali` implementation patterns:
 
-### 4.1. Tool-as-a-Service (TaaS)
-- **Decision**: Every security tool is encapsulated as an MCP Capability.
-- **Rationale**: Simplifies the AI task. The AI invokes "port_scan" with structured parameters, and the wrapper handles the platform-specific syntax (e.g., Nmap flags).
+- **Recon Server** (`servers/recon/`):
+  - Wraps Nmap, Gobuster, Dirb, Enum4linux.
+  - Normalizes output into JSON for the Knowledge Base.
 
-### 4.2. DAG-based Task Scheduling
-- **Decision**: Logic execution is modeled as a Directed Acyclic Graph (DAG).
-- **Rationale**: Pentesting is inherently sequential (Recon -> Enum -> Exploit). DAGs ensure dependencies are met and enable parallel scanning where assets are independent.
+- **Exploit Server** (`servers/exploit/`):
+  - Wraps SQLMap, Hydra, John, Metasploit, WPScan.
+  - Handles sensitive operations with "Human-in-the-loop" approval checks (simulated or CLI prompt).
 
-### 4.3. Command Sanitization Layer
-- **Decision**: Mandatory regex-based shell injection filtering in the core security module.
-- **Rationale**: Prevents accidental command injection when the AI or user provides malformed inputs to tool wrappers.
+- **AI Server** (`servers/ai/`):
+  - Analyzes simplified scan results.
+  - Suggests next steps (e.g., "Found WordPress -> Suggest WPScan").
 
-## 5. Resilient Workflow (3-Strike Protocol)
-To ensure reliability in complex or unstable environments, the execution engine follows a systematic error handling protocol:
+### 3.3. Communication
+- **Node Manager**: Handles heartbeat and reachability of execution nodes.
+- **Message Router**: Routes MCP JSON-RPC messages between Scheduler and Tools.
 
-1. **Strike 1: Diagnose & Retry** — Read the tool error and attempt a retry with sanitized parameters (e.g., adjusting Nmap timing).
-2. **Strike 2: Alternative Tooling** — If the primary tool fails, switch to a fallback capability (e.g., switching from Gobuster to a custom directory fuzzer).
-3. **Strike 3: Logic Rethink** — After two tool-level failures, the AI re-evaluates the attack chain based on the failure context.
+## 4. Requirement Mapping
 
-## 6. Subsystem Detailed Design
+| Feature | Requirement | Component Implementation |
+| :--- | :--- | :--- |
+| **Tool Support** | Prd F1 | `servers/recon/capabilities/*.py`, `servers/exploit/capabilities/*.py` |
+| **Scheduler** | Prd F2 | `core/scheduler/dag_builder.py` |
+| **CLI** | Prd F3 | `client/cli.py` (using Rich/Click) |
+| **Asset Storage** | NFR-Data | `core/knowledge/` + Redis |
+| **Security** | NFR-Sec | Pydantic validation on all Tool arguments |
 
-### 6.1. Scheduler (The Coordinator)
-- **Workflow**:
-    1. Receives target from CLI.
-    2. Requests decomposition from **AI Server**.
-    3. Builds DAG and dispatches tasks to **Recon/Exploit Nodes**.
-    4. Aggregates results into the **Knowledge Base**.
+## 5. Security Architecture
+- **Input Validation**: Strict typing via Pydantic models prevents common command injection vectors.
+- **Execution Isolation**: Tools run in subprocesses; Docker containerization recommended for isolation.
+- **API Security**: Simple API Key authentication for node-to-node communication.
 
-### 6.2. AI Decision Engine
-- **Attack Chain Builder**: Transforms high-level goals into specific tool sequences.
-- **Feedback Loop**: Uses real-time findings to pivot the attack strategy (e.g., if port 80 is found, prioritize web templates).
-
-### 6.3. Knowledge Base (KB)
-- **Asset Model**: Centralized state management for all discovered hosts and services.
-- **Telemetry**: Stores execution logs and tool outputs for both visualization and AI context.
-
-## 7. Deployment Plan
-- **Environment**: Kali Linux (Native/VM)
-- **Prerequisites**: Python 3.10+, Redis, and security tools pre-installed in `$PATH`.
-- **Modes**: Supports both **Local Mono-node** and **Distributed Control** via MCP over SSE.
+## 6. Deployment
+- **Local Dev**: `python start.py` (starts redis + all python services).
+- **Lab**: `docker-compose up` (orchestrates containers).
