@@ -61,6 +61,5 @@ python -m unittest tests/test_tools.py
 ```
 
 ## 4. Next Steps
-- Implement remaining tools: `Dirb`, `Nikto`, `WPScan`, `Enum4linux`.
 - Integrate `KaliToolsClient` into the tool wrappers to support remote execution (currently wrappers use local `CommandExecutor`).
 - Develop the CLI interface (Feature 3) to expose these tools to the user.

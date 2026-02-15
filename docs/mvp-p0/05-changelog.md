@@ -1,37 +1,29 @@
-# 05. Changelog & Migration (Prototype -> MVP P0)
+# Changelog
 
-**Version**: 1.0
-**Date**: 2026-02-07
+All notable changes to this project will be documented in this file.
 
-## Overview
-This document tracks the structural and functional changes from the initial `MCP_kali` prototype to the formalized MVP P0 architecture.
+## [1.0.0] - 2026-02-15 (MVP P0)
 
-## Summary of Changes
+### Added
+- **Feature 1: Tool Support**
+  - Implemented wrappers for Nmap, Gobuster, Nuclei, SQLMap, Hydra, Metasploit.
+  - Standardized `CommandExecutor` with timeout and logging.
+- **Feature 2: Task Scheduler**
+  - AsyncIO-based Scheduler engine.
+  - DAG-based task execution (Nmap findings trigger web scans).
+  - `Job` and `Task` Pydantic models.
+- **Feature 3: CLI Interface**
+  - `scan start`, `scan status`, `report export` commands.
+  - Integrated `rich` for terminal UI.
+- **Testing & Quality**
+  - Unit tests for Scheduler and Models.
+  - Integration test for full scan flow.
+  - Performance benchmark script (verified 50+ jobs/sec throughput).
+- **Documentation**
+  - Updated README with usage instructions.
+  - Created Design Specification for MVP.
+  - Created Performance Report.
 
-### 1. Architecture Refactoring
-- **Removed**: Flat structure (`kali_server.py`, `mcp_server.py` in root).
-- **Added**: Modular structure (`core/`, `servers/`, `client/`).
-- **Reason**: Separation of concerns, scalability, and alignment with `PROJECT_STRUCTURE_SIMPLIFIED.md`.
-
-### 2. Functional Changes
-
-| Feature | Prototype (`MCP_kali`) | MVP P0 | PRD Reference |
-|---------|------------------------|--------|---------------|
-| **Execution** | Generic `execute_command` (Remote Shell) | Specific Tool Wrappers (Nmap, Nuclei) | Feature 1 |
-| **Parsing** | Raw stdout/stderr | Structured JSON Parsing | Feature 1 |
-| **Scheduling**| None (Direct API call) | DAG/Sequential Scheduler | Feature 2 |
-| **Interface** | HTTP API (Flask) | CLI (Click) + Internal MCP API | Feature 3 |
-| **Config** | Env Vars / Hardcoded | `config.yaml` | Non-Functional |
-
-### 3. Deleted / Deprecated Items
-- **File**: `MCP-Kali-Server/kali_server.py`
-    - **Status**: Deprecated.
-    - **Migration**: Logic moved to `servers/base/execution.py` (planned).
-- **File**: `MCP-Kali-Server/mcp_server.py`
-    - **Status**: Deprecated.
-    - **Migration**: Replaced by `core/mcp/protocol.py` and `servers/*/`.
-
-## Compatibility Guide
-- **API**: The old Flask API (`POST /execute`) is **NOT** compatible with the new MCP-based architecture.
-- **Data**: No persistent data existed in prototype, so no migration needed.
-- **Clients**: Any scripts calling the old API must be rewritten to use the new `mcp_scan` CLI or SDK.
+### Changed
+- Refactored project structure to `src/mcp_scan`.
+- Consolidated dependency management in `requirements.txt`.
