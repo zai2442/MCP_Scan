@@ -1,0 +1,50 @@
+openapi: 3.0.0
+info:
+  title: Job Result Export API
+  version: 1.0.0
+  description: API for exporting job results from MySQL storage.
+paths:
+  /api/v1/jobs/{job_id}/export:
+    get:
+      summary: Export job result to JSON file
+      parameters:
+        - in: path
+          name: job_id
+          schema:
+            type: string
+            pattern: '^[a-zA-Z0-9_-]{1,64}$'
+          required: true
+          description: Unique Job ID
+      responses:
+        '200':
+          description: Export successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  file:
+                    type: string
+                    example: "job-123_result.json"
+        '400':
+          description: Invalid parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Invalid job_id format"
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Job not found"
+        '500':
+          description: Internal server error

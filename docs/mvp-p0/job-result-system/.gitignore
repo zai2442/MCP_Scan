@@ -1,0 +1,9 @@
+node_modules/
+data/
+exports/
+.env
+*.log
+npm-debug.log
+coverage/
+dist/
+.DS_Store
