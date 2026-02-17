@@ -2,6 +2,7 @@ USE job_result_db;
 
 CREATE TABLE IF NOT EXISTS job_results (
     job_id VARCHAR(64) PRIMARY KEY,
+    status VARCHAR(20) DEFAULT 'pending',
     result_data JSON NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

@@ -11,10 +11,18 @@ class ServerConfig(BaseModel):
     host: str = "127.0.0.1"
     port: int = 8000
 
+class DatabaseConfig(BaseModel):
+    host: str = "localhost"
+    port: int = 3306
+    user: str = "root"
+    password: str = "root"
+    database: str = "job_result_db"
+
 class MCPConfig(BaseModel):
     log_level: str = "INFO"
     tools: Dict[str, ToolConfig] = Field(default_factory=dict)
     server: ServerConfig = Field(default_factory=ServerConfig)
+    database: DatabaseConfig = Field(default_factory=DatabaseConfig)
 
 def load_config(config_path: str = "config.yaml") -> MCPConfig:
     """Load configuration from a YAML file."""

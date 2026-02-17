@@ -9,6 +9,7 @@ from mcp_scan.core.errors import ToolNotFoundError, SchedulerError
 from mcp_scan.tools.nmap_tool import run_nmap
 from mcp_scan.tools.nuclei_tool import run_nuclei
 from mcp_scan.tools.gobuster_tool import run_gobuster
+from mcp_scan.core.db import get_db
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +17,7 @@ class Scheduler:
     def __init__(self):
         self.jobs: Dict[UUID, Job] = {}
         self.active_tasks: Dict[UUID, asyncio.Task] = {}
+        self.db = get_db()
         # Loop should be retrieved in async context, not init
 
     async def create_job(self, target: str) -> Job:
@@ -32,6 +34,9 @@ class Scheduler:
         )
         job.tasks.append(nmap_task)
         
+        # Save to DB
+        self.db.save_job(job)
+        
         return job
 
     async def run_job(self, job_id: UUID):
@@ -41,6 +46,7 @@ class Scheduler:
             raise SchedulerError(f"Job {job_id} not found")
 
         job.status = TaskStatus.RUNNING
+        self.db.update_status(job.id, TaskStatus.RUNNING.value)
         logger.info(f"Starting job {job_id} for target {job.target}")
 
         try:
@@ -79,6 +85,7 @@ class Scheduler:
                     if not running:
                         logger.error("Deadlock detected or dependencies failed.")
                         job.status = TaskStatus.FAILED
+                        self.db.save_job(job) # Save final state
                         return
                     await asyncio.sleep(1)
                     continue
@@ -88,16 +95,20 @@ class Scheduler:
                     # Run in background
                     task.status = TaskStatus.RUNNING
                     task.started_at = datetime.now()
+                    # Save state before running task
+                    self.db.save_job(job)
                     asyncio.create_task(self._execute_task(job, task))
                 
                 await asyncio.sleep(0.5)
 
             job.status = TaskStatus.COMPLETED
+            self.db.save_job(job) # Save completed state
             logger.info(f"Job {job_id} completed.")
 
         except Exception as e:
             logger.error(f"Job failed: {e}")
             job.status = TaskStatus.FAILED
+            self.db.save_job(job) # Save failed state
 
     async def _execute_task(self, job: Job, task: Task):
         """Execute a single task and handle results."""
@@ -122,11 +133,15 @@ class Scheduler:
             else:
                 task.status = TaskStatus.FAILED
                 task.error = result.get("stderr") or result.get("error")
+            
+            # Save job state after task completion
+            self.db.save_job(job)
                 
         except Exception as e:
             logger.error(f"Task execution failed: {e}")
             task.status = TaskStatus.FAILED
             task.error = str(e)
+            self.db.save_job(job)
 
     def _run_tool_wrapper(self, tool_name: str, params: Dict[str, Any]) -> Dict[str, Any]:
         """Dispatch to the correct tool function."""
@@ -172,4 +187,15 @@ class Scheduler:
                 job.tasks.append(gobuster_task)
 
     def get_job(self, job_id: UUID) -> Optional[Job]:
-        return self.jobs.get(job_id)
+        # Try memory first
+        if job_id in self.jobs:
+            return self.jobs[job_id]
+        
+        # Try DB
+        job = self.db.get_job(job_id)
+        if job:
+            # Cache back to memory (optional, but good for subsequent access if process is long-running)
+            self.jobs[job.id] = job
+            return job
+            
+        return None

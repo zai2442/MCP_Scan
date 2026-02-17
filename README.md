@@ -36,29 +36,29 @@ MCP Scan is a lightweight, modular, AI-orchestrated distributed penetration test
 
 ### Start a Scan
 ```bash
-python -m mcp_scan.main scan start --target 192.168.1.10 --profile fast
+PYTHONPATH=src python3 -m mcp_scan.cli start --target example.com
 ```
 
 ### Check Status
 ```bash
-python -m mcp_scan.main scan status <JOB_ID>
+PYTHONPATH=src python3 -m mcp_scan.cli status <JOB_ID>
 ```
 
 ### Export Report
 ```bash
-python -m mcp_scan.main report export <JOB_ID> -o report.json
+PYTHONPATH=src python3 -m mcp_scan.cli report <JOB_ID> -o <输出文件路径>
 ```
 
 ## Development
 
 ### Running Tests
 ```bash
-python run_tests.py
+PYTHONPATH=src python3 run_tests.py
 ```
 
 ### Running Benchmark
 ```bash
-python run_benchmark.py
+PYTHONPATH=src python3 run_benchmark.py
 ```
 
 ## Architecture

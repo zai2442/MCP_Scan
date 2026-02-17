@@ -6,12 +6,24 @@ Containerized MySQL system for storing and exporting job results.
 
 1.  **Start Services**:
     ```bash
-    docker-compose up -d
+    sudo docker-compose up -d
     ```
+
+    > **Note**: If you encounter port conflicts (e.g., `Bind for 0.0.0.0:3306 failed: port is already allocated`), ensure no other MySQL instances or `docker-proxy` processes are running.
+    > 
+    > **Cleanup Command**:
+    > ```bash
+    > # Stop existing containers
+    > sudo docker stop $(sudo docker ps -aq)
+    > # Remove containers
+    > sudo docker rm $(sudo docker ps -aq)
+    > # Kill zombie proxy processes if necessary
+    > sudo lsof -t -i:3306 | xargs -r sudo kill
+    > ```
 
 2.  **View Logs**:
     ```bash
-    docker-compose logs -f
+    sudo docker-compose logs -f
     ```
 
 3.  **Run Tests**:

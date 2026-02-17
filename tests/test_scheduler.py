@@ -6,6 +6,13 @@ from mcp_scan.core.models import TaskStatus
 
 class TestScheduler(unittest.TestCase):
     def setUp(self):
+        # Patch database to prevent real connection attempts
+        self.db_patcher = patch('mcp_scan.core.scheduler.get_db')
+        self.mock_get_db = self.db_patcher.start()
+        self.mock_db = MagicMock()
+        self.mock_get_db.return_value = self.mock_db
+        self.addCleanup(self.db_patcher.stop)
+
         self.scheduler = Scheduler()
 
     def test_create_job(self):

@@ -73,13 +73,16 @@ def report(job_id, output):
 
     job = scheduler.get_job(uuid_id)
     if job:
-        data = job.model_dump()
+        # Dump full model to dict, converting UUIDs and datetimes to strings
+        data = json.loads(job.model_dump_json())
     else:
-        data = {"job_id": job_id, "error": "Job not found in current session"}
+        # If job not found, try to give a helpful error
+        console.print(f"[red]Job {job_id} not found.[/red]")
+        return
 
     try:
         with open(output, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2, default=str)
+            json.dump(data, f, ensure_ascii=False, indent=2)
         console.print(f"[green]Report exported successfully: {output}[/green]")
     except OSError as e:
         console.print(f"[red]Failed to write report: {e}[/red]")
