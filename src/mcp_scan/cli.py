@@ -90,7 +90,11 @@ def report(job_id, output):
 @cli.command()
 def server():
     """Start the MCP Server to expose tools."""
-    console.print("[bold green]Starting MCP Server...[/bold green]")
+    # Redirect info message to stderr to avoid polluting stdout (MCP protocol requirement)
+    from rich.console import Console
+    import sys
+    err_console = Console(stderr=True)
+    err_console.print("[bold green]Starting MCP Server...[/bold green]")
     from mcp_scan.transport.mcp_server import start_server
     start_server()
 

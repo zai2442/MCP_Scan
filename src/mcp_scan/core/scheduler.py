@@ -9,6 +9,8 @@ from mcp_scan.core.errors import ToolNotFoundError, SchedulerError
 from mcp_scan.tools.nmap_tool import run_nmap
 from mcp_scan.tools.nuclei_tool import run_nuclei
 from mcp_scan.tools.gobuster_tool import run_gobuster
+from mcp_scan.tools.sqlmap_tool import run_sqlmap
+from mcp_scan.tools.hydra_tool import run_hydra
 from mcp_scan.core.db import get_db
 
 logger = logging.getLogger(__name__)
@@ -152,6 +154,10 @@ class Scheduler:
         elif tool_name == "gobuster":
             # Assuming gobuster tool signature
             return run_gobuster(**params)
+        elif tool_name == "sqlmap":
+            return run_sqlmap(**params)
+        elif tool_name == "hydra":
+            return run_hydra(**params)
         else:
             raise ToolNotFoundError(tool_name)
 
