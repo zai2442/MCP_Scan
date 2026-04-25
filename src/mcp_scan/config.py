@@ -12,7 +12,7 @@ class ServerConfig(BaseModel):
     port: int = 8000
 
 class DatabaseConfig(BaseModel):
-    host: str = "localhost"
+    host: str = "127.0.0.1"
     port: int = 3306
     user: str = "root"
     password: str = "root"

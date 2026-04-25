@@ -1,0 +1,77 @@
+{
+  "id": "234e9ffd-fc25-4be3-b692-34b3f858d613",
+  "target": "192.168.1.10",
+  "status": "completed",
+  "tasks": [
+    {
+      "id": "8b9c0e66-1313-48ad-b82b-7e3c5bab3e9b",
+      "tool_name": "nmap",
+      "params": {
+        "ports": "top-1000",
+        "target": "192.168.1.10"
+      },
+      "status": "completed",
+      "result": {
+        "stderr": "",
+        "stdout": "Starting Nmap 7.91 ( https://nmap.org ) at 2026-02-16 22:54 EST\nNote: Host seems down. If it is really up, but blocking our ping probes, try -Pn\nNmap done: 1 IP address (0 hosts up) scanned in 3.04 seconds\n",
+        "command": "nmap -T3 --top-ports 1000 192.168.1.10",
+        "success": true,
+        "timed_out": false,
+        "return_code": 0
+      },
+      "dependencies": [],
+      "error": null,
+      "created_at": "2026-02-16T22:54:28.375882",
+      "started_at": "2026-02-16T22:54:28.390787",
+      "completed_at": "2026-02-16T22:54:31.488793"
+    },
+    {
+      "id": "1147ab99-e060-46cb-a227-e23e599da480",
+      "tool_name": "nuclei",
+      "params": {
+        "target": "http://192.168.1.10"
+      },
+      "status": "completed",
+      "result": {
+        "stderr": "\n                     __     _\n   ____  __  _______/ /__  (_)\n  / __ \\/ / / / ___/ / _ \\/ /\n / / / / /_/ / /__/ /  __/ /\n/_/ /_/\\__,_/\\___/_/\\___/_/   v3.7.0\n\n\t\tprojectdiscovery.io\n\n[\u001b[34mINF\u001b[0m] Current nuclei version: v3.7.0 (\u001b[92mlatest\u001b[0m)\n[\u001b[34mINF\u001b[0m] Current nuclei-templates version: v10.3.9 (\u001b[92mlatest\u001b[0m)\n[\u001b[34mINF\u001b[0m] New templates added in latest release: 182\n[\u001b[34mINF\u001b[0m] Templates loaded for current scan: 9810\n[\u001b[34mINF\u001b[0m] Executing 9808 signed templates from projectdiscovery/nuclei-templates\n[\u001b[34mINF\u001b[0m] Targets loaded for current scan: 1\n[\u001b[34mINF\u001b[0m] Templates clustered: 2237 (Reduced 2113 Requests)\n[\u001b[34mINF\u001b[0m] Using Interactsh Server: oast.site\n[\u001b[34mINF\u001b[0m] Skipped 192.168.1.10:80 from target list as found unresponsive permanently: cause=\"i/o timeout\" address=192.168.1.10:80 chain=\"got err while executing\"\n[\u001b[34mINF\u001b[0m] Scan completed in 1m. No results found.\n",
+        "stdout": "[\u001b[93mWRN\u001b[0m] Loading 2 unsigned templates for scan. Use with caution.\n",
+        "command": "nuclei -target http://192.168.1.10 -rate-limit 50",
+        "success": true,
+        "timed_out": false,
+        "return_code": 0
+      },
+      "dependencies": [
+        "8b9c0e66-1313-48ad-b82b-7e3c5bab3e9b"
+      ],
+      "error": null,
+      "created_at": "2026-02-16T22:54:31.488981",
+      "started_at": "2026-02-16T22:54:31.898944",
+      "completed_at": "2026-02-16T22:56:14.606139"
+    },
+    {
+      "id": "af835c8f-1e4f-43d2-8ca3-bdeb6817b5fe",
+      "tool_name": "gobuster",
+      "params": {
+        "url": "http://192.168.1.10"
+      },
+      "status": "failed",
+      "result": {
+        "stderr": "2026/02/16 22:54:41 error on running gobuster on http://192.168.1.10/: timeout occurred during the request\n",
+        "stdout": "===============================================================\nGobuster v3.8.2\nby OJ Reeves (@TheColonial) & Christian Mehlmauer (@firefart)\n===============================================================\n[+] Url:                     http://192.168.1.10\n[+] Method:                  GET\n[+] Threads:                 10\n[+] Wordlist:                /usr/share/wordlists/dirb/common.txt\n[+] Negative Status codes:   404\n[+] User Agent:              gobuster/3.8.2\n[+] Timeout:                 10s\n===============================================================\nStarting gobuster in directory enumeration mode\n===============================================================\n",
+        "command": "gobuster dir -u http://192.168.1.10 -w /usr/share/wordlists/dirb/common.txt -t 10",
+        "success": false,
+        "timed_out": false,
+        "return_code": 1
+      },
+      "dependencies": [
+        "8b9c0e66-1313-48ad-b82b-7e3c5bab3e9b"
+      ],
+      "error": "2026/02/16 22:54:41 error on running gobuster on http://192.168.1.10/: timeout occurred during the request\n",
+      "created_at": "2026-02-16T22:54:31.489000",
+      "started_at": "2026-02-16T22:54:31.902754",
+      "completed_at": "2026-02-16T22:54:41.957544"
+    }
+  ],
+  "created_at": "2026-02-16T22:54:28.375857",
+  "assets": []
+}

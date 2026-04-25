@@ -87,6 +87,13 @@ def report(job_id, output):
     except OSError as e:
         console.print(f"[red]Failed to write report: {e}[/red]")
 
+@cli.command()
+def server():
+    """Start the MCP Server to expose tools."""
+    console.print("[bold green]Starting MCP Server...[/bold green]")
+    from mcp_scan.transport.mcp_server import start_server
+    start_server()
+
 def generate_status_table(job_id: UUID) -> Table:
     job = scheduler.get_job(job_id)
     if not job:
